@@ -17,5 +17,7 @@ int main(){
     }
 
     free(arr);
+    
+    std::cout << "parasha";
 
 }
