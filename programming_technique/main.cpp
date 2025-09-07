@@ -2,17 +2,20 @@
 #include "LinReg.h"
 
 
+
+/*
+add lr scheduler
+add time_counter
+*/
+
 int main(){
 
 
-    auto [X, y, dim, n_obj] = process_data(10000);
-
-    
-
+    auto [X, y, dim, n_obj] = process_data(30000);
 
     LinReg LR1(dim, -0.1, 0.1);
     // std::cout << LR1;
-    LR1.fit(X, y, n_obj, 0.01, 512, true);
+    LR1.fit(X, y, n_obj, 0.9, 512, true);
     // std::cout << LR1;
 
 

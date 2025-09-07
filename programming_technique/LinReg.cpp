@@ -116,6 +116,7 @@ void LinReg::fit(double** X, double* y, int n_obj, double lr, int n_epoch, bool 
         //applying gradient
         for(int i=0; i<=dim; ++i){
             weights[i] -= lr * grad[i];
+            max_w = std::max(max_w, std::abs(weights[i]));
         }
 
 
@@ -137,7 +138,7 @@ void LinReg::fit(double** X, double* y, int n_obj, double lr, int n_epoch, bool 
 
 
         if(verbose){
-            std::cout << "  |  epoch_loss " << epoch_loss << "  |  max_grad" << max_grad <<"\n";
+            std::cout << "  |  epoch_loss " << epoch_loss << "  |  max_grad " << max_grad << "  |  max_weight " << max_w <<"\n";
         }
         total_loss += epoch_loss;
     }

@@ -55,8 +55,8 @@ def train_linear_regression(X, y, verbose=True):
     # Создаем и обучаем модель
     model = SGDRegressor(
         learning_rate='constant',  # постоянный learning rate
-        eta0=0.01,        # значение learning rate
-        max_iter=512,         # количество эпох
+        eta0=0.001,        # значение learning rate
+        max_iter=1024,         # количество эпох
         tol=1e-6,                  # tolerance для остановки
         random_state=42,
         verbose=verbose
@@ -84,7 +84,7 @@ def train_linear_regression(X, y, verbose=True):
 def main():
     
     # Читаем данные (можно изменить размер)
-    X, y, dim, n_obj = process_data_python(1000)  # или 512
+    X, y, dim, n_obj = process_data_python(30000)  # или 512
     
 
     # Обучаем модель
