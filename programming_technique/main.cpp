@@ -3,11 +3,6 @@
 
 
 
-/*
-add lr scheduler
-add time_counter
-*/
-
 int main(){
 
 
@@ -15,7 +10,10 @@ int main(){
 
     LinReg LR1(dim, -0.1, 0.1);
     // std::cout << LR1;
-    LR1.fit(X, y, n_obj, 0.9, 512, true);
+
+
+
+    LR1.fit(X, y, n_obj, 1.0, 0.95, 1e-8, 512, true);
     // std::cout << LR1;
 
 

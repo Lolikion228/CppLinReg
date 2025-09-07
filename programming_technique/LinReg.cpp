@@ -7,6 +7,8 @@
 #include <limits>
 #include <cstring>
 #include <random>
+#include <chrono>
+
 
 double dot(double* x1, double* x2, int dim){
     double res = 0;
@@ -64,12 +66,15 @@ void LinReg::SetWeights(double *w){
 
 
 // X[n_obj][dim]
-void LinReg::fit(double** X, double* y, int n_obj, double lr, int n_epoch, bool verbose){
+void LinReg::fit(double** X, double* y, int n_obj, double initial_lr, double lr_decay, double min_lr, int n_epoch, bool verbose){
     double total_loss = 0;
     double min_loss = std::numeric_limits<double>::max();
     double max_loss = 0;
-    
+    double lr = initial_lr;
+    auto fit_start = std::chrono::high_resolution_clock::now();
+
     for(int k=0; k<n_epoch; ++k){
+        
         double max_grad = 0;
         double max_w = 0;
 
@@ -120,6 +125,10 @@ void LinReg::fit(double** X, double* y, int n_obj, double lr, int n_epoch, bool 
         }
 
 
+        //updating learning_rate
+        lr *= lr_decay;
+        lr = std::max(min_lr, lr);
+
 
         free(grad);
         
@@ -135,19 +144,21 @@ void LinReg::fit(double** X, double* y, int n_obj, double lr, int n_epoch, bool 
         max_loss = std::max(epoch_loss, max_loss);
         free(diff);
 
-
-
+        
         if(verbose){
-            std::cout << "  |  epoch_loss " << epoch_loss << "  |  max_grad " << max_grad << "  |  max_weight " << max_w <<"\n";
+            std::cout << "  |  epoch_loss " << epoch_loss << "  |  max_grad " << max_grad << "  |  max_weight " << max_w << "  |  curr_lr " << lr <<"\n";
         }
         total_loss += epoch_loss;
+        
     }
+    auto fit_end = std::chrono::high_resolution_clock::now();
+    auto fit_duration = std::chrono::duration_cast<std::chrono::microseconds>(fit_end - fit_start);
 
-    if(verbose){
-        std::cout << "\ntotal_mean_loss " << total_loss / n_epoch << "\n";
-        std::cout << "min_loss " << min_loss << "\n";
-        std::cout << "max_loss " << max_loss << "\n";
-    }
+    std::cout << "\ntotal time elapsed " << fit_duration.count() / 1000000.0 << " seconds\n";
+    std::cout << "total_mean_loss " << total_loss / n_epoch << "\n";
+    std::cout << "min_loss " << min_loss << "\n";
+    std::cout << "max_loss " << max_loss << "\n";
+  
 }
 
 

@@ -41,7 +41,7 @@ class LinReg{
 
 
         // X[n_obj][dim]
-        void fit(double** X, double* y, int n_obj, double lr, int n_epoch, bool verbose);
+        void fit(double** X, double* y, int n_obj, double initial_lr, double lr_decay, double min_lr, int n_epoch, bool verbose);
 
 
         friend std::ostream& operator << (std::ostream& out, const LinReg& LR);
