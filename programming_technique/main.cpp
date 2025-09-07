@@ -1,23 +1,20 @@
 #include <iostream>
-#include <vector>
-#include <fstream>
-#include <tuple>
-#include <limits>
-#include <cstring>
 #include "LinReg.h"
 
 
 int main(){
 
 
-    auto [X, y, dim, n_obj] = process_data(512);
+    auto [X, y, dim, n_obj] = process_data(10000);
 
-    LinReg LR1(dim);
-
-    std::cout << LR1;
-    LR1.fit(X, y, n_obj, 1.0, 128, true);
-    std::cout << LR1;
     
+
+
+    LinReg LR1(dim, -0.1, 0.1);
+    // std::cout << LR1;
+    LR1.fit(X, y, n_obj, 0.01, 512, true);
+    // std::cout << LR1;
+
 
     free_data(X, y, n_obj);
 

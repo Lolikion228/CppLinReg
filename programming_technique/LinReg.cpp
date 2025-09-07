@@ -6,6 +6,7 @@
 #include <tuple>
 #include <limits>
 #include <cstring>
+#include <random>
 
 double dot(double* x1, double* x2, int dim){
     double res = 0;
@@ -18,9 +19,15 @@ double dot(double* x1, double* x2, int dim){
 
 
 
-LinReg::LinReg(int d){
+LinReg::LinReg(int d, double a, double b){
     dim = d;
     weights = (double*) calloc(dim + 1, sizeof(double));// init with zeros
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::normal_distribution<double> dist(a,b);
+    for(int i = 0; i <= dim; ++i) {
+        weights[i] = dist(gen);
+    }
 }
 
 
@@ -61,8 +68,12 @@ void LinReg::fit(double** X, double* y, int n_obj, double lr, int n_epoch, bool 
     double total_loss = 0;
     double min_loss = std::numeric_limits<double>::max();
     double max_loss = 0;
-
+    
     for(int k=0; k<n_epoch; ++k){
+        double max_grad = 0;
+        double max_w = 0;
+
+
         ++total_epochs;
         if(verbose){
             std::cout << "Epoch " << k + 1 << " / " << n_epoch;
@@ -95,14 +106,19 @@ void LinReg::fit(double** X, double* y, int n_obj, double lr, int n_epoch, bool 
         }
 
 
-        for(int i=0; i<dim; ++i){
+        for(int i=0; i<=dim; ++i){
             grad[i] *= (2.0 / n_obj);
+            max_grad = std::max(max_grad, std::abs(grad[i]));
         }
 
+
+
         //applying gradient
-        for(int i=0; i<dim; ++i){
+        for(int i=0; i<=dim; ++i){
             weights[i] -= lr * grad[i];
         }
+
+
 
         free(grad);
         
@@ -121,7 +137,7 @@ void LinReg::fit(double** X, double* y, int n_obj, double lr, int n_epoch, bool 
 
 
         if(verbose){
-            std::cout << "  |  epoch_loss " << epoch_loss << "\n";
+            std::cout << "  |  epoch_loss " << epoch_loss << "  |  max_grad" << max_grad <<"\n";
         }
         total_loss += epoch_loss;
     }
@@ -158,7 +174,6 @@ LinReg::~LinReg(){
 
 
 std::tuple<double**, double*, int, int> process_data(int max_obj){
-
     // data reading
     std::ifstream file("./data/data.txt");
     int n_obj;
@@ -185,6 +200,7 @@ std::tuple<double**, double*, int, int> process_data(int max_obj){
     }
 
     file.close();
+
 
 
     // data normalizing  (min_max)

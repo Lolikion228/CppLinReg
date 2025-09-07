@@ -21,7 +21,7 @@ class LinReg{
 
     public:
 
-        LinReg(int d);
+        LinReg(int d, double a, double b);
 
     
         // x[dim]
