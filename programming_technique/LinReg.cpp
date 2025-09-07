@@ -19,8 +19,6 @@ double dot(double* x1, double* x2, int dim){
 }
 
 
-
-
 LinReg::LinReg(int d, double a, double b){
     dim = d;
     weights = (double*) calloc(dim + 1, sizeof(double));// init with zeros
@@ -110,7 +108,6 @@ void LinReg::fit(double** X, double* y, int n_obj, double initial_lr, double lr_
             }
         }
 
-
         for(int i=0; i<=dim; ++i){
             grad[i] *= (2.0 / n_obj);
             max_grad = std::max(max_grad, std::abs(grad[i]));
@@ -123,6 +120,8 @@ void LinReg::fit(double** X, double* y, int n_obj, double initial_lr, double lr_
             weights[i] -= lr * grad[i];
             max_w = std::max(max_w, std::abs(weights[i]));
         }
+        free(grad);
+
 
 
         //updating learning_rate
@@ -130,7 +129,6 @@ void LinReg::fit(double** X, double* y, int n_obj, double initial_lr, double lr_
         lr = std::max(min_lr, lr);
 
 
-        free(grad);
         
         // computing MSE
         double epoch_loss = 0;
@@ -178,11 +176,10 @@ std::ostream& operator << (std::ostream& out, const LinReg& LR){
     return out;
 }
 
+
 LinReg::~LinReg(){
             free(weights);
         }
-
-
 
 
 std::tuple<double**, double*, int, int> process_data(int max_obj){

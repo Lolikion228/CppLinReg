@@ -9,6 +9,7 @@
 #include <limits>
 #include <cstring>
 
+
 double dot(double* x1, double* x2, int dim);
 
 
@@ -54,10 +55,8 @@ class LinReg{
 
 std::tuple<double**, double*, int, int> process_data(int max_obj);
 
+
 void free_data(double** X, double* y, int n_obj);
-
-
-
 
 
 #endif // LINREG_H
