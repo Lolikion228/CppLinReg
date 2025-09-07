@@ -1,104 +1,143 @@
 #include <iostream>
 #include <vector>
-#include <string>
 #include <cstring>
+#include <random>
 
-template<typename T, typename Func>
-void map(T& data, Func function){
-    for(auto& x: data){
-        x = function(x);
-    }  
+
+
+
+double dot(double* x1, double* x2, int dim){
+    double res = 0;
+    for(int i=0; i<dim; ++i){
+        res += x1[i] * x2[i];
+    }
+    return res;
 }
 
 
-class String{
+class LinReg{
     private:
         
-        
+        int dim;
+        double* weights;
+
     public:
-    char* data;
-        int len;
+
+        LinReg(int d){
+            dim = d;
+            weights = (double*) calloc(dim + 1, sizeof(double));// init with zeros
+        }
+
         
-        String(std::string s){
-            std::cout << "normal constructor\n";
-            len = s.size();
-            data = (char*)calloc(len, sizeof(char));
-            for(size_t i=0; i<len; ++i){
-                data[i] = s[i];
+        // x[dim]
+        double pred_single(double* x) const{
+            double res = dot(x, weights, dim);
+            res += weights[dim]; // adding w_0
+            return res;
+        }
+
+
+        // X[n_obj][dim]
+        double* pred_batch(double** X, int n_obj) const{
+            double* res = (double*) calloc(n_obj, sizeof(double));
+            for(int i=0; i<n_obj; ++i){
+                res[i] = pred_single(X[i]);
             }
+            return res;
+        }
+
+        // return w from R^(dim+1) where w_0 = w[dim] = bias term
+        double* GetWeights() const{
+            double* w = (double*) calloc(dim + 1, sizeof(double));
+            memcpy(w, weights, (dim + 1) * sizeof(double));
+            return w;
+        }
+
+        // set weights to w where w[dim] = w_0 = bias term
+        void SetWeights(double *w){
+            memcpy(weights, w, (dim + 1) * sizeof(double));
         }
 
 
-        String(const String& other){
-            std::cout << "copy constructor\n";
-            len = other.len;
-            data = (char*)calloc(len, sizeof(char));
-            memcpy(data, other.data, len * sizeof(char));
-    
-        }
+
+        // X[n_obj][dim]
+        void fit(double** X, double* y, int n_obj, double lr, int n_epoch){
+
+            for(int k=0; k<n_epoch; ++k){
+
+                //computing y_pred - y
+                double* pred = pred_batch(X, n_obj);
+                double* diff = (double*)calloc(n_obj, sizeof(double));
+
+                for(int i=0; i<n_obj; ++i){
+                    diff[i] = pred[i] - y[i];
+                }
+
+                free(pred);
 
 
-        String(const String&& other){
-            std::cout << "move constructor\n";
-            len = other.len;
-            data = (char*)calloc(len, sizeof(char));
-            memcpy(data, other.data, len * sizeof(char));
-        }
-        
-        // оператор присваивания
-        String& operator = (const String& other){
-            len = other.len;
-            free(data);
-            data = (char*)calloc(len, sizeof(char));
-            memcpy(data, other.data, len * sizeof(char));
-            return *this;
-        }
+
+                // computing gradient
+                double* grad = (double*)calloc((dim+1), sizeof(double));
+                grad[dim] = 0;
+
+                for(int j=0; j<n_obj; ++j){
+                    grad[dim] += diff[j];
+                }
+
+                for(int i=0; i<dim; ++i){
+                    grad[i] = 0;
+                    for(int j=0; j<n_obj; ++j){
+                        grad[i] += X[j][i] * diff[j];
+                    }
+                }
+
+                for(int i=0; i<dim; ++i){
+                    grad[i] *= (2.0 / n_obj);
+                }
+
+                
+
+                // computing MSE
+                double epoch_loss = 0;
+
+                for(int j=0; j<n_obj; ++j){
+                    epoch_loss += diff[j]*diff[j];
+                }
+
+                epoch_loss /= n_obj;
+                free(diff);
 
 
-        friend std::ostream& operator << (std::ostream &out, const String& str){
-            for(int i=0; i<str.len; ++i){
-                out << str.data[i];
+
+                //applying gradient
+                for(int i=0; i<dim; ++i){
+                    weights[i] -= lr * grad[i];
+                }
+
+                free(grad);
             }
-            return out;
+
         }
 
 
-        ~String(){
-            std::cout << "destructor\n";
-            free(data);
-        }
 
+
+        ~LinReg(){
+            free(weights);
+        }
 
 };
 
 
 
-String mapping(String& x){
-    if (x.data[0] == 'a'){
-        return String("A");
-    }
-    else if(x.data[0] == 'b'){
-        return String("B");
-    }
-    else{
-        return String("ERR");
-    }
-}
-
 int main(){
 
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-   std::vector<String> v;
-
-   v.emplace_back("bebra");
-   v.emplace_back("amogus");
-   v.emplace_back("mogus");
-
-   map(v, mapping);
-
-   std::cout<<v[0] << "\n";
-   std::cout<<v[1] << "\n";
-   std::cout<<v[2] << "\n";
-
+    
+    double random_double = dist(gen);
 
 }
