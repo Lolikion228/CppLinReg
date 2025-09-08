@@ -250,6 +250,13 @@ LRSchedulerBase::LRSchedulerBase(int n_epochs, double initial_lr, double decay_r
 };
 
 
+ConstantLR::ConstantLR(double lr):
+    LRSchedulerBase(1, lr, 1.0){}
+
+ double ConstantLR::Step(int epoch){
+    return _initial_lr;
+ }   
+
 
 StepDecay::StepDecay(int n_epochs, double initial_lr, double decay_rate, int step_size ):
     LRSchedulerBase(n_epochs, initial_lr, decay_rate){

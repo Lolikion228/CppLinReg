@@ -88,6 +88,15 @@ class StepDecay : public LRSchedulerBase{
 
 
 
+class ConstantLR : public LRSchedulerBase{
+    public:
+        ConstantLR(double lr);
+            
+        double Step(int epoch) override;
+};
+
+
+
 
 class ExponentialDecay : public LRSchedulerBase{
     public:

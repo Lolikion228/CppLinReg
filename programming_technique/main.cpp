@@ -11,7 +11,7 @@ int main(){
     double initial_lr = 1.0;
     double decay = 0.95;
     
-    StepDecay lr(n_epochs, initial_lr, decay, 5);
+    ConstantLR lr(1.1);
     
     for(int i=1; i<=n_epochs; ++i){
         std::cout << "epoch " << i << "  |  lr " << lr.Step(i) << "\n";
