@@ -226,8 +226,7 @@ void free_data(double** X, double* y, int n_obj){
 
 
 
-LRSchedulerBase::LRSchedulerBase(int n_epochs, double initial_lr, double decay_rate ){
-    _n_epochs = n_epochs;
+LRSchedulerBase::LRSchedulerBase(double initial_lr, double decay_rate ){
     _initial_lr = initial_lr;
     _curr_lr = initial_lr;
     _decay_rate = decay_rate;
@@ -236,7 +235,7 @@ LRSchedulerBase::LRSchedulerBase(int n_epochs, double initial_lr, double decay_r
 
 
 ConstantLR::ConstantLR(double lr):
-    LRSchedulerBase(1, lr, 1.0){}
+    LRSchedulerBase(lr, 1.0){}
 
  double ConstantLR::Step(int epoch){
     return _initial_lr;
@@ -251,8 +250,8 @@ ConstantLR::ConstantLR(double lr):
 
 
 
-StepDecay::StepDecay(int n_epochs, double initial_lr, double decay_rate, int step_size ):
-    LRSchedulerBase(n_epochs, initial_lr, decay_rate){
+StepDecay::StepDecay(double initial_lr, double decay_rate, int step_size ):
+    LRSchedulerBase(initial_lr, decay_rate){
         _step_size = step_size; 
     }
     
@@ -274,8 +273,8 @@ double StepDecay::Step(int epoch) {
 
 
 
-ExponentialDecay::ExponentialDecay(int n_epochs, double initial_lr, double decay_rate):
-    LRSchedulerBase(n_epochs, initial_lr, decay_rate){}
+ExponentialDecay::ExponentialDecay(double initial_lr, double decay_rate):
+    LRSchedulerBase(initial_lr, decay_rate){}
 
 double ExponentialDecay::Step(int epoch) {
     double new_lr =  _initial_lr * pow(_decay_rate, epoch);
@@ -294,8 +293,8 @@ std::ostream& operator << (std::ostream& out, const ExponentialDecay& lr){
 
 
 
-CosineDecay::CosineDecay(int n_epochs, double initial_lr, double min_lr, int T):
-    LRSchedulerBase(n_epochs, initial_lr, 1.0){
+CosineDecay::CosineDecay(double initial_lr, double min_lr, int T):
+    LRSchedulerBase(initial_lr, 1.0){
         _min_lr = min_lr;
         _T = T;
     }

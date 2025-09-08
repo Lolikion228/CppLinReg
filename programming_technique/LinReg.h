@@ -16,12 +16,11 @@ double dot(double* x1, double* x2, int dim);
 class LRSchedulerBase{
     public:
 
-        int _n_epochs;
         double _initial_lr;
         double _decay_rate;
         double _curr_lr;
 
-        LRSchedulerBase(int n_epochs, double initial_lr, double decay_rate );
+        LRSchedulerBase(double initial_lr, double decay_rate );
 
         virtual double Step(int epoch) = 0;
 
@@ -83,7 +82,7 @@ class StepDecay : public LRSchedulerBase{
     private:
         int _step_size;
     public:
-        StepDecay(int n_epochs, double initial_lr, double decay_rate, int step_size );
+        StepDecay(double initial_lr, double decay_rate, int step_size );
             
         double Step(int epoch) override;
 
@@ -108,7 +107,7 @@ class ConstantLR : public LRSchedulerBase{
 
 class ExponentialDecay : public LRSchedulerBase{
     public:
-        ExponentialDecay(int n_epochs, double initial_lr, double decay_rate);
+        ExponentialDecay(double initial_lr, double decay_rate);
         
         double Step(int epoch) override;
 
@@ -121,7 +120,7 @@ class CosineDecay : public LRSchedulerBase{
         double _min_lr;
         int _T;
     public:
-        CosineDecay(int n_epochs, double initial_lr, double min_lr, int T);
+        CosineDecay(double initial_lr, double min_lr, int T);
             
         double Step(int epoch) override;
 
