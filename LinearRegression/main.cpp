@@ -3,8 +3,6 @@
 #include <cmath>
 
 
-
-
 int main(){
 
     // int n_epochs=256;
@@ -29,7 +27,7 @@ int main(){
     // StepDecay* lr = new StepDecay(initial_lr, decay_rate, step_size);
 
    
-    auto [X, y, dim, n_obj] = process_data(30000);
+    auto [X, y, dim, n_obj] = process_data("./data/data.txt", 30000);
 
     LinReg LR1(dim, -0.1, 0.1);
 
@@ -37,7 +35,7 @@ int main(){
 
     free_data(X, y, n_obj);
 
-    std::cout << "\n" <<*lr;
+
     delete lr;
 
 }

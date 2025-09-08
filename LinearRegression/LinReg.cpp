@@ -169,9 +169,9 @@ LinReg::~LinReg(){
         }
 
 
-std::tuple<double**, double*, int, int> process_data(int max_obj){
+std::tuple<double**, double*, int, int> process_data(const std::string& data_path, int max_obj){
     // data reading
-    std::ifstream file("./data/data.txt");
+    std::ifstream file(data_path);
     int n_obj;
     int dim;
     file >> n_obj;

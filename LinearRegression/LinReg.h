@@ -68,7 +68,7 @@ class LinReg{
 };
 
 
-std::tuple<double**, double*, int, int> process_data(int max_obj);
+std::tuple<double**, double*, int, int> process_data(const std::string& data_path, int max_obj);
 
 
 void free_data(double** X, double* y, int n_obj);
