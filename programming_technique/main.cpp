@@ -7,25 +7,37 @@
 
 int main(){
 
-    int n_epochs = 64;
+    // int n_epochs=256;
+    // ConstantLR* lr = new ConstantLR(1.1);
+
+
+    // int n_epochs = 256;
+    // double initial_lr = 1.0;
+    // double decay_rate = 0.97;
+    // ExponentialDecay* lr = new ExponentialDecay(n_epochs, initial_lr, decay_rate);
+
+    int n_epochs = 512;
     double initial_lr = 1.0;
-    double decay = 0.95;
-    
-    ConstantLR lr(1.1);
-    
-    for(int i=1; i<=n_epochs; ++i){
-        std::cout << "epoch " << i << "  |  lr " << lr.Step(i) << "\n";
+    double min_lr = 1e-7;
+    int T = 64;
+    CosineDecay* lr = new CosineDecay(n_epochs, initial_lr, min_lr, T);
 
-    }
+    // int n_epochs = 512;
+    // double initial_lr = 1.0;
+    // double decay_rate = 0.95;
+    // int step_size = 16;
+    // StepDecay* lr = new StepDecay(n_epochs, initial_lr, decay_rate, step_size);
 
-    // auto [X, y, dim, n_obj] = process_data(30000);
+   
+    auto [X, y, dim, n_obj] = process_data(30000);
 
-    // LinReg LR1(dim, -0.1, 0.1);
-    // std::cout << LR1;
-    // LR1.fit(X, y, n_obj, 1.0, 0.95, 1e-8, 512, true);
-    // std::cout << LR1;
+    LinReg LR1(dim, -0.1, 0.1);
 
-    // free_data(X, y, n_obj);
+    LR1.fit(X, y, n_obj, *lr, n_epochs, false);
+
+    free_data(X, y, n_obj);
+
+    delete lr;
 
 }
 

@@ -64,11 +64,11 @@ void LinReg::SetWeights(double *w){
 
 
 // X[n_obj][dim]
-void LinReg::fit(double** X, double* y, int n_obj, double initial_lr, double lr_decay, double min_lr, int n_epoch, bool verbose){
+void LinReg::fit(double** X, double* y, int n_obj, LRSchedulerBase& lr, int n_epoch, bool verbose){
     double total_loss = 0;
     double min_loss = std::numeric_limits<double>::max();
     double max_loss = 0;
-    double lr = initial_lr;
+
     auto fit_start = std::chrono::high_resolution_clock::now();
 
     for(int k=0; k<n_epoch; ++k){
@@ -117,17 +117,10 @@ void LinReg::fit(double** X, double* y, int n_obj, double initial_lr, double lr_
 
         //applying gradient
         for(int i=0; i<=dim; ++i){
-            weights[i] -= lr * grad[i];
+            weights[i] -= lr.Step(k+1) * grad[i];
             max_w = std::max(max_w, std::abs(weights[i]));
         }
         free(grad);
-
-
-
-        //updating learning_rate
-        lr *= lr_decay;
-        lr = std::max(min_lr, lr);
-
 
         
         // computing MSE
@@ -144,7 +137,7 @@ void LinReg::fit(double** X, double* y, int n_obj, double initial_lr, double lr_
 
         
         if(verbose){
-            std::cout << "  |  epoch_loss " << epoch_loss << "  |  max_grad " << max_grad << "  |  max_weight " << max_w << "  |  curr_lr " << lr <<"\n";
+            std::cout << "  |  epoch_loss " << epoch_loss << "  |  max_grad " << max_grad << "  |  max_weight " << max_w << "  |  curr_lr " << lr._curr_lr <<"\n";
         }
         total_loss += epoch_loss;
         

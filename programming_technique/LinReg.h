@@ -13,6 +13,21 @@
 
 double dot(double* x1, double* x2, int dim);
 
+class LRSchedulerBase{
+    public:
+
+        int _n_epochs;
+        double _initial_lr;
+        double _decay_rate;
+        double _curr_lr;
+
+        LRSchedulerBase(int n_epochs, double initial_lr, double decay_rate );
+
+        virtual double Step(int epoch) = 0;
+
+        virtual ~LRSchedulerBase(){}
+};
+
 
 class LinReg{
     private:
@@ -43,7 +58,7 @@ class LinReg{
 
 
         // X[n_obj][dim]
-        void fit(double** X, double* y, int n_obj, double initial_lr, double lr_decay, double min_lr, int n_epoch, bool verbose);
+        void fit(double** X, double* y, int n_obj, LRSchedulerBase& lr, int n_epoch, bool verbose);
 
 
         friend std::ostream& operator << (std::ostream& out, const LinReg& LR);
@@ -60,20 +75,7 @@ std::tuple<double**, double*, int, int> process_data(int max_obj);
 void free_data(double** X, double* y, int n_obj);
 
 
-class LRSchedulerBase{
-    public:
 
-        int _n_epochs;
-        double _initial_lr;
-        double _decay_rate;
-        double _curr_lr;
-
-        LRSchedulerBase(int n_epochs, double initial_lr, double decay_rate );
-
-        virtual double Step(int epoch) = 0;
-
-        // virtual ~LRSchedulerBase();
-};
 
 
 
