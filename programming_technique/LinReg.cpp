@@ -60,6 +60,7 @@ double* LinReg::GetWeights() const{
 // set weights to w where w[dim] = w_0 = bias term
 void LinReg::SetWeights(double *w){
     memcpy(weights, w, (dim + 1) * sizeof(double));
+    total_epochs = 0;
 }
 
 
@@ -154,17 +155,10 @@ void LinReg::fit(double** X, double* y, int n_obj, LRSchedulerBase& lr, int n_ep
 
 
 std::ostream& operator << (std::ostream& out, const LinReg& LR){
-    for(int i=0; i<64; ++i){
-        out<<'*';
-    }
 
-    out << "\nLinearRegression model\n";
+    out << "LinearRegression model\n";
     out << "dim = " << LR.dim <<"\n";
     out << "was fitted " << LR.total_epochs <<" times\n";
-    for(int i=0; i<64; ++i){
-        out<<'*';
-    }
-    out<<'\n';
 
     return out;
 }
@@ -232,9 +226,6 @@ void free_data(double** X, double* y, int n_obj){
 
 
 
-
-
-
 LRSchedulerBase::LRSchedulerBase(int n_epochs, double initial_lr, double decay_rate ){
     _n_epochs = n_epochs;
     _initial_lr = initial_lr;
@@ -243,12 +234,21 @@ LRSchedulerBase::LRSchedulerBase(int n_epochs, double initial_lr, double decay_r
 };
 
 
+
 ConstantLR::ConstantLR(double lr):
     LRSchedulerBase(1, lr, 1.0){}
 
  double ConstantLR::Step(int epoch){
     return _initial_lr;
  }   
+
+ std::ostream& operator << (std::ostream& out, const ConstantLR& lr){
+    std::cout << "ConstantLR scheduler\n";
+    std::cout << "lr(epoch) = initial_lr\n";
+    std::cout << "lr = " << lr._initial_lr << "\n";
+    return out;
+ }
+
 
 
 StepDecay::StepDecay(int n_epochs, double initial_lr, double decay_rate, int step_size ):
@@ -262,6 +262,16 @@ double StepDecay::Step(int epoch) {
     return _curr_lr;
 }
 
+ std::ostream& operator << (std::ostream& out, const StepDecay& lr){
+    std::cout << "StepDecay scheduler\n";
+    std::cout << "lr(epoch) = initial_lr * pow(decay_rate, floor(epoch / step_size))\n";
+    std::cout << "initial_lr = " << lr._initial_lr << "\n";
+    std::cout << "current_lr = " << lr._curr_lr << "\n";
+    std::cout << "decay_rate = " << lr._decay_rate << "\n";
+    std::cout << "step_size = " << lr._step_size << "\n";
+    return out;
+ }
+
 
 
 ExponentialDecay::ExponentialDecay(int n_epochs, double initial_lr, double decay_rate):
@@ -272,6 +282,15 @@ double ExponentialDecay::Step(int epoch) {
     _curr_lr = new_lr;
     return _curr_lr;
 }
+
+std::ostream& operator << (std::ostream& out, const ExponentialDecay& lr){
+    std::cout << "ExponentialDecay scheduler\n";
+    std::cout << "lr(epoch) = initial_lr * pow(decay_rate, epoch)\n";
+    std::cout << "initial_lr = " << lr._initial_lr << "\n";
+    std::cout << "current_lr = " << lr._curr_lr << "\n";
+    std::cout << "decay_rate = " << lr._decay_rate << "\n";
+    return out;
+ }
 
 
 
@@ -286,3 +305,13 @@ double CosineDecay::Step(int epoch) {
     _curr_lr = new_lr;
     return _curr_lr;
 }
+
+std::ostream& operator << (std::ostream& out, const CosineDecay& lr){
+    std::cout << "CosineDecay scheduler\n";
+    std::cout << "lr(epoch) =  min_lr + 0.5 * (initial_lr - min_lr) * (1.0 + cos((epoch * M_PI) / T))\n";
+    std::cout << "initial_lr = " << lr._initial_lr << "\n";
+    std::cout << "current_lr = " << lr._curr_lr << "\n";
+    std::cout << "min_lr = " << lr._min_lr << "\n";
+    std::cout << "T = " << lr._T << "\n";
+    return out;
+ }

@@ -86,6 +86,9 @@ class StepDecay : public LRSchedulerBase{
         StepDecay(int n_epochs, double initial_lr, double decay_rate, int step_size );
             
         double Step(int epoch) override;
+
+        friend std::ostream& operator << (std::ostream& out, const StepDecay& lr);
+
 };
 
 
@@ -95,6 +98,9 @@ class ConstantLR : public LRSchedulerBase{
         ConstantLR(double lr);
             
         double Step(int epoch) override;
+
+        friend std::ostream& operator << (std::ostream& out, const ConstantLR& lr);
+
 };
 
 
@@ -105,6 +111,8 @@ class ExponentialDecay : public LRSchedulerBase{
         ExponentialDecay(int n_epochs, double initial_lr, double decay_rate);
         
         double Step(int epoch) override;
+
+        friend std::ostream& operator << (std::ostream& out, const ExponentialDecay& lr);
 };
 
 
@@ -116,6 +124,8 @@ class CosineDecay : public LRSchedulerBase{
         CosineDecay(int n_epochs, double initial_lr, double min_lr, int T);
             
         double Step(int epoch) override;
+
+        friend std::ostream& operator << (std::ostream& out, const CosineDecay& lr);
 };
 
 #endif // LINREG_H
