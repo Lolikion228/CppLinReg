@@ -67,7 +67,15 @@ class LinReg{
 
 };
 
+/*
+data filet format should be like:
 
+n_obj dim
+x[0][0] x[0][1]  ...  x[0][dim - 1]  y[0]
+...
+x[n_obj - 1][0]  ...  x[n_obj - 1][dim - 1]  y[n_obj - 1]
+
+*/
 std::tuple<double**, double*, int, int> process_data(const std::string& data_path, int max_obj);
 
 
