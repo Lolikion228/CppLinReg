@@ -29,9 +29,10 @@ int main(){
    
     auto [X, y, dim, n_obj] = process_data("./data/data.txt", 30000);
 
-    LinReg LR1(dim, -0.1, 0.1);
+    LinReg LR1{dim, -0.1, 0.1};
 
     LR1.fit(X, y, n_obj, *lr, n_epochs, false);
+    
 
     free_data(X, y, n_obj);
 
