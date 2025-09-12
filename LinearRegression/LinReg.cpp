@@ -146,10 +146,16 @@ void LinReg::fit(double** X, double* y, int n_obj, LRSchedulerBase& lr, int n_ep
     auto fit_end = std::chrono::high_resolution_clock::now();
     auto fit_duration = std::chrono::duration_cast<std::chrono::microseconds>(fit_end - fit_start);
 
-    std::cout << "\ntotal time elapsed " << fit_duration.count() / 1000000.0 << " seconds\n";
-    std::cout << "total_mean_loss " << total_loss / n_epoch << "\n";
-    std::cout << "min_loss " << min_loss << "\n";
-    std::cout << "max_loss " << max_loss << "\n";
+    if(verbose){
+        std::cout << "total time elapsed " << fit_duration.count() / 1000000.0 << " seconds\n";
+        std::cout << "max_loss " << max_loss << "\n";
+        std::cout << "min_loss " << min_loss << "\n";
+    }
+    else{
+        std::cout << fit_duration.count() / 1000000.0 << " ";
+        std::cout << max_loss << " ";
+        std::cout << min_loss << "\n";
+    }
   
 }
 

@@ -3,10 +3,10 @@
 #include <cmath>
 
 
-int main(){
+int main(int argc, char**args){
 
-    // int n_epochs=256;
-    // ConstantLR* lr = new ConstantLR(1.1);
+    // int n_epochs=512;
+    // ConstantLR* lr = new ConstantLR(1.0);
 
    
     // int n_epochs = 256;
