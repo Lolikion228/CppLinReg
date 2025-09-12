@@ -5,40 +5,40 @@
 
 int main(int argc, char**args){
 
-    // int n_epochs=512;
-    // ConstantLR* lr = new ConstantLR(1.0);
-
-   
-    // int n_epochs = 256;
-    // double initial_lr = 1.0;
-    // double decay_rate = 0.97;
-    // ExponentialDecay* lr = new ExponentialDecay(initial_lr, decay_rate);
+    if ( (argc != 1) && (argc != 5) ){
+        throw std::invalid_argument("you should pass 0 or 4 arguments, you passed " + std::to_string(argc-1) + "." );
+        return 1;
+    }
     
-    int n_epochs = 512;
-    double initial_lr = 1.0;
-    double min_lr = 1e-7;
-    int T = 64;
-    CosineDecay* lr = new CosineDecay(initial_lr, min_lr, T);
-   
-    // int n_epochs = 512;
-    // double initial_lr = 1.0;
-    // double decay_rate = 0.95;
-    // int step_size = 16;
-    // StepDecay* lr = new StepDecay(initial_lr, decay_rate, step_size);
+    int n_epochs;
+    double initial_lr;
+    double min_lr;
+    int T;
 
-   
+    if(argc==1){
+        n_epochs = 512;
+        initial_lr = 1.0;
+        min_lr = 1e-7;
+        T = 64;
+    }
+    else if(argc == 5) {
+        n_epochs = std::stoi(args[1]);
+        initial_lr = std::stod(args[2]);
+        min_lr = std::stod(args[3]);
+        T = std::stoi(args[4]);
+    }
+
+    CosineDecay* lr = new CosineDecay(initial_lr, min_lr, T);
+
     auto [X, y, dim, n_obj] = process_data("./data/data.txt", 30000);
 
     LinReg LR1{dim, -0.1, 0.1};
 
     LR1.fit(X, y, n_obj, *lr, n_epochs, false);
     
-
     free_data(X, y, n_obj);
 
-
     delete lr;
-
 }
 
 
