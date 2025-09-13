@@ -4,7 +4,7 @@ from sklearn.metrics import mean_squared_error
 import time
 import sys
 
-def process_data_python(data_path='./data/data.txt', max_obj=None):
+def process_data(data_path='./data/orig_data.txt', max_obj=None):
 
     with open(data_path, 'r') as file:
 
@@ -88,7 +88,7 @@ def main():
         n_epochs = 512
         initial_lr = 0.01
         decay_rate = 0.25
-        data_path = './data/data.txt'
+        data_path = './data/orig_data.txt'
     elif len(args) == 5:
         n_epochs = int(args[1])
         initial_lr = float(args[2])
@@ -98,7 +98,7 @@ def main():
         raise Exception(f"you should pass 0 or 4 arguments, but {len(args)-1} were passed")
 
 
-    X, y = process_data_python(data_path)  
+    X, y = process_data(data_path)  
     elapsed_time, mse_max, mse_min = train_linear_regression(X, y, n_epochs, initial_lr, decay_rate, verbose=False)
     print(elapsed_time, mse_max, mse_min)
 

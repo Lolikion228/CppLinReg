@@ -17,11 +17,11 @@ int main(int argc, char**args){
     double decay_rate;
     std::string fpath;
 
-    if(argc==1){
+    if(argc == 1){
         n_epochs = 512;
         initial_lr = 0.01;
         decay_rate = 0.25;
-        fpath = "./data/data.txt";
+        fpath = "./data/orig_data.txt";
     }
     else if(argc == 5) {
         n_epochs = std::stoi(args[1]);
@@ -30,7 +30,7 @@ int main(int argc, char**args){
         fpath = args[4];
     }
     else{
-        throw std::invalid_argument("you should pass 0 or 5 arguments, you passed " + std::to_string(argc-1) + "." );
+        throw std::invalid_argument("you should pass 0 or 4 arguments, you passed " + std::to_string(argc-1) + "." );
         return 1;
     }
 
