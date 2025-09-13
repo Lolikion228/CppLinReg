@@ -204,6 +204,48 @@ std::tuple<double**, double*, int, int> process_data(const std::string& data_pat
     file.close();
 
 
+    // data normalizing  (min_max)
+    for(int i=0; i<n_obj; ++i){
+        for(int j=0; j<dim; ++j){
+            X[i][j] /= max_val[j];
+        }
+        y[i] /= max_val[dim];
+    }
+
+    free(max_val);
+
+    std::tuple<double**, double*, int, int> result = {X,y,dim,n_obj};
+    return result;
+}
+
+std::tuple<double**, double*, int, int> process_data(const std::string& data_path){
+    // data reading
+    std::ifstream file(data_path);
+    int n_obj;
+    int dim;
+    file >> n_obj;
+    file >> dim;
+    double** X = (double**)calloc(n_obj, sizeof(double*));
+
+    for(int i=0; i<n_obj; ++i){
+        X[i] = (double*)calloc(dim, sizeof(double));
+    }
+
+    double* y = (double*)calloc(n_obj, sizeof(double));
+    double* max_val = (double*)calloc(dim+1, sizeof(double));
+
+    for(int i=0; i<n_obj; ++i){
+        for(int j=0; j<dim; ++j){
+            file >> X[i][j];
+            max_val[j] = std::max(max_val[j], std::abs(X[i][j]));
+        }
+        file >> y[i];
+        max_val[dim] = std::max(max_val[dim], std::abs(y[i]));
+    }
+
+    file.close();
+
+
 
     // data normalizing  (min_max)
     for(int i=0; i<n_obj; ++i){
