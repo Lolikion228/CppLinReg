@@ -2,6 +2,12 @@
 #include "LinReg.h"
 #include <cmath>
 
+/*
+add:
+shuffle
+weight penalty
+*/
+
 
 int main(int argc, char**args){
 
