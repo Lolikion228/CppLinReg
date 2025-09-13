@@ -5,10 +5,6 @@
 
 int main(int argc, char**args){
 
-    if ( (argc != 1) && (argc != 6) ){
-        throw std::invalid_argument("you should pass 0 or 5 arguments, you passed " + std::to_string(argc-1) + "." );
-        return 1;
-    }
     
     int n_epochs;
     double initial_lr;
@@ -30,12 +26,16 @@ int main(int argc, char**args){
         T = std::stoi(args[4]);
         fpath = args[5];
     }
+    else{
+        throw std::invalid_argument("you should pass 0 or 5 arguments, you passed " + std::to_string(argc-1) + "." );
+        return 1;
+    }
 
     CosineDecay* lr = new CosineDecay(initial_lr, min_lr, T);
 
     auto [X, y, dim, n_obj] = process_data(fpath);
 
-    
+
     LinReg LR1{dim, -0.1, 0.1};
 
     LR1.fit(X, y, n_obj, *lr, n_epochs, false);
