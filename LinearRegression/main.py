@@ -2,7 +2,6 @@ import os
 from tqdm import tqdm
 from lr_exec import process_data
 from sklearn.decomposition import PCA
-import numpy as np
 
 
 def perform_pca():
@@ -36,10 +35,10 @@ def grid_search():
         os.remove('./logs/cpp_log.txt')
 
 
-    n_epochs = [128, 256, 512, 1024, 2048, 4096][:2]
-    initial_lr = [1.0, 1e-1, 1e-2, 1e-3, 1e-4][:2]
-    decay_rate = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7][:2]
-    data_files = [ x for x in os.listdir('./data') if x.startswith('data')][:2]
+    n_epochs = [128, 256, 512, 1024, 2048, 4096]
+    initial_lr = [1.0, 1e-1, 1e-2, 1e-3, 1e-4]
+    decay_rate = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7]
+    data_files = [ x for x in os.listdir('./data') if x.startswith('data')]
 
     pbar = tqdm(total= len(n_epochs) * len(initial_lr) * len(decay_rate) * len(data_files), desc='grid search')
 

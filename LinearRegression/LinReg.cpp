@@ -65,7 +65,7 @@ void LinReg::SetWeights(double *w){
 
 
 // X[n_obj][dim]
-void LinReg::fit(double** X, double* y, int n_obj, LRSchedulerBase& lr, int n_epoch, bool verbose){
+void LinReg::fit(double** X, double* y, int n_obj, LRSchedulerBase& lr, int n_epoch, double alpha, bool verbose){
     double total_loss = 0;
     double min_loss = std::numeric_limits<double>::max();
     double max_loss = 0;
@@ -113,7 +113,13 @@ void LinReg::fit(double** X, double* y, int n_obj, LRSchedulerBase& lr, int n_ep
             grad[i] *= (2.0 / n_obj);
             max_grad = std::max(max_grad, std::abs(grad[i]));
         }
+        
+        // l2 regularization
+        for(int i=0; i<dim; ++i){
+            grad[i] += 2 * alpha * weights[i];
+        }
 
+        double l2_w_penalty = alpha * dot(weights, weights, dim);
 
 
         //applying gradient
@@ -122,7 +128,7 @@ void LinReg::fit(double** X, double* y, int n_obj, LRSchedulerBase& lr, int n_ep
             max_w = std::max(max_w, std::abs(weights[i]));
         }
         free(grad);
-
+    
         
         // computing MSE
         double epoch_loss = 0;
@@ -138,7 +144,7 @@ void LinReg::fit(double** X, double* y, int n_obj, LRSchedulerBase& lr, int n_ep
 
         
         if(verbose){
-            std::cout << "  |  epoch_loss " << epoch_loss << "  |  max_grad " << max_grad << "  |  max_weight " << max_w << "  |  curr_lr " << lr._curr_lr <<"\n";
+            std::cout << "  |  epoch_loss " << epoch_loss << "  | l2_penalty " << l2_w_penalty << "  |  max_grad " << max_grad << "  |  max_weight " << max_w << "  |  curr_lr " << lr._curr_lr <<"\n";
         }
         total_loss += epoch_loss;
         

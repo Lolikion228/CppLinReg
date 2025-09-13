@@ -2,11 +2,7 @@
 #include "LinReg.h"
 #include <cmath>
 
-/*
-add:
-shuffle
-weight penalty
-*/
+
 
 
 int main(int argc, char**args){
@@ -16,6 +12,7 @@ int main(int argc, char**args){
     double initial_lr;
     double decay_rate;
     std::string fpath;
+    double regularization_alpha = 1e-3;
 
     if(argc == 1){
         n_epochs = 512;
@@ -40,7 +37,7 @@ int main(int argc, char**args){
 
     LinReg LR1{dim, -0.1, 0.1};
 
-    LR1.fit(X, y, n_obj, *lr, n_epochs, false);
+    LR1.fit(X, y, n_obj, *lr, n_epochs, regularization_alpha, false);
     
     free_data(X, y, n_obj);
 
