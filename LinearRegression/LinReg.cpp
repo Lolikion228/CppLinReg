@@ -325,7 +325,7 @@ ExponentialDecay::ExponentialDecay(double initial_lr, double decay_rate):
     LRSchedulerBase(initial_lr, decay_rate){}
 
 double ExponentialDecay::Step(int epoch) {
-    double new_lr =  _initial_lr * pow(_decay_rate, epoch);
+    double new_lr =  _initial_lr / pow(epoch, _decay_rate);
     _curr_lr = new_lr;
     return _curr_lr;
 }
