@@ -11,20 +11,22 @@ int main(int argc, char**args){
     int n_epochs;
     double initial_lr;
     double decay_rate;
-    std::string fpath;
+    std::string fpath = "./data/orig_data.txt";
     double regularization_alpha = 1e-3;
 
     if(argc == 1){
         n_epochs = 512;
         initial_lr = 0.01;
         decay_rate = 0.25;
-        fpath = "./data/orig_data.txt";
+        regularization_alpha = 1e-3;
+        // fpath = "./data/orig_data.txt";
     }
     else if(argc == 5) {
         n_epochs = std::stoi(args[1]);
         initial_lr = std::stod(args[2]);
         decay_rate = std::stod(args[3]);
-        fpath = args[4];
+        regularization_alpha = std::stod(args[4]);
+        // fpath = args[4];
     }
     else{
         throw std::invalid_argument("you should pass 0 or 4 arguments, you passed " + std::to_string(argc-1) + "." );

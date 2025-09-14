@@ -38,24 +38,24 @@ def grid_search():
     n_epochs = [128, 256, 512, 1024, 2048, 4096]
     initial_lr = [1.0, 1e-1, 1e-2, 1e-3, 1e-4]
     decay_rate = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7]
-    data_files = [ x for x in os.listdir('./data') if x.startswith('data')]
+    reg = [ 1e-2, 5e-3, 1e-3,  5e-4, 1e-4, 1e-5]
 
-    pbar = tqdm(total= len(n_epochs) * len(initial_lr) * len(decay_rate) * len(data_files), desc='grid search')
+    pbar = tqdm(total= len(n_epochs) * len(initial_lr) * len(decay_rate) * len(reg), desc='grid search')
 
     for ne in n_epochs:
         for il in initial_lr:
             for dr in decay_rate:
-                for df in data_files:
+                for r in reg:
 
                     py_f = open('./logs/py_log.txt', 'a')
-                    py_f.write(f"{ne} {il} {dr} {df} ")
+                    py_f.write(f"{ne} {il} {dr} {r} ")
                     py_f.close()
-                    os.system(f"python ./lr_exec.py {ne} {il} {dr} {'./data/' + df}  >> ./logs/py_log.txt")
+                    os.system(f"python ./lr_exec.py {ne} {il} {dr} {r}  >> ./logs/py_log.txt")
 
                     c_f = open('./logs/cpp_log.txt', 'a')
-                    c_f.write(f"{ne} {il} {dr} {df} ")
+                    c_f.write(f"{ne} {il} {dr} {r} ")
                     c_f.close()
-                    os.system(f"./lr_exec {ne} {il} {dr} {'./data/' + df} >> ./logs/cpp_log.txt")
+                    os.system(f"./lr_exec {ne} {il} {dr} {r} >> ./logs/cpp_log.txt")
 
                     pbar.update()
 

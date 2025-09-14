@@ -46,17 +46,18 @@ def process_data(data_path='./data/orig_data.txt', max_obj=None):
     return X, y
 
 
-def train_linear_regression(X, y, n_epochs, initial_lr, decay, verbose=True):
+def train_linear_regression(X, y, n_epochs, initial_lr, decay, reg, verbose=True):
 
     model = SGDRegressor(
         learning_rate = 'invscaling', 
         eta0 = initial_lr,       
         max_iter = 1,
+        alpha = reg,
+        penalty = 'l2',
         shuffle=False,
         power_t = decay,     
         warm_start=True,  
-        tol = None,
-        penalty = None,                  
+        tol = None,                 
         random_state = None,
         verbose = verbose
     )
@@ -88,18 +89,19 @@ def main():
         n_epochs = 512
         initial_lr = 0.01
         decay_rate = 0.25
-        data_path = './data/orig_data.txt'
+        reg = 1e-3
+        # data_path = './data/orig_data.txt'
     elif len(args) == 5:
         n_epochs = int(args[1])
         initial_lr = float(args[2])
         decay_rate = float(args[3])
-        data_path = args[4]
+        reg = float(args[4])
     else:
         raise Exception(f"you should pass 0 or 4 arguments, but {len(args)-1} were passed")
 
 
-    X, y = process_data(data_path)  
-    elapsed_time, mse_max, mse_min = train_linear_regression(X, y, n_epochs, initial_lr, decay_rate, verbose=False)
+    X, y = process_data('./data/orig_data.txt')  
+    elapsed_time, mse_max, mse_min = train_linear_regression(X, y, n_epochs, initial_lr, decay_rate, reg, verbose=False)
     print(elapsed_time, mse_max, mse_min)
 
 
