@@ -53,9 +53,6 @@ X[n_obj - 1][0]  ...  X[n_obj - 1][dim - 1]  y[n_obj - 1]
 --------------------------
 В файле **lr_exec.cpp** был реализован скрипт для запуска пайплайна 
 "подготовка данных -> инициализация модели с заданными парметрами -> обучение -> рассчёт метрик" для представителя класса LinReg.\
-__*Далее будем считать, что имеется скомпилированный из lr_exec.cpp и LinReg.cpp\
- файл с названием lr_exec__
-
 
 В файле **lr_exec.py** всё аналогично, но для представителя класса SGDRegressor.
 
@@ -81,6 +78,9 @@ __n_epochs initial_lr decay_rate regularization_alpha elapsed_time train_loss te
 
 Как запустить cpp и py версию и что произойдёт
 =============
+Cначала нужно скомпилировать cpp версию, например вот так:\
+`g++ lr_exec.cpp LinReg.cpp -o lr_exec`
+
 Для запуска cpp версии используется команда:\
 `./lr_exec {n_epochs} {initial_lr} {decay_rate} {regularization_alpha}`
 
@@ -88,7 +88,7 @@ __n_epochs initial_lr decay_rate regularization_alpha elapsed_time train_loss te
 `python lr_exec.py {n_epochs} {initial_lr} {decay_rate} {regularization_alpha}`
 
 В результате работы в стандартный вывод будет записано сообщение в cледующем формате:\
-__elapsed_time train_loss test_loss__
+**elapsed_time train_loss test_loss**
 
 
 
