@@ -20,7 +20,7 @@ $f(x) = <w,x> + w_0, \hspace{0.5em} w,x \in \mathbb{R}^n,\hspace{0.2em} w_0 \in 
 
 Данные
 ===============
-Был использован датасет https://www.kaggle.com/datasets/camnugent/california-housing-prices.\
+Был использован датасет https://www.kaggle.com/datasets/camnugent/california-housing-prices. \
 На этапе подготовки данных была выкинута колонка **oceanProximity** (для того чтобы не тратить время на кодирование признака, который изначально не является числовым).
 В качестве таргета была выбрана колонка **medianHouseValue**.\
 На этапе обработки происходит приведение значений признаков в диапазон $(-1, 1)$
@@ -40,17 +40,13 @@ $f(x) = <w,x> + w_0, \hspace{0.5em} w,x \in \mathbb{R}^n,\hspace{0.2em} w_0 \in 
 Формат выглядит следующим образом:
 
 
-
-$\text{n\_obj} \hspace{0.9em} \text{dim}\\
-\begin{array}{c c c c c}
-X_{0,0} & X_{0,1} & \cdots & X_{0,\text{dim} - 1} & y_0 \\
-X_{1,0} & X_{1,1} & \cdots & X_{1,\text{dim} - 1} & y_1 \\
-\vdots & \vdots & \ddots & \vdots & \vdots \\
-X_{\text{n\_obj} - 1, 0} & X_{\text{n\_obj} - 1, 1} & \cdots & X_{\text{n\_obj} - 1, \text{dim} - 1} & y_{\text{n\_obj} - 1} \\
-\end{array}\\$
+n_obj dim\
+X[0][0] X[0][1]  ...  X[0][dim - 1]  y[0]\
+...\
+X[n_obj - 1][0]  ...  X[n_obj - 1][dim - 1]  y[n_obj - 1]
 
 
-Где $X_{i,j}$ есть значение j-го признака у i-ой точки данных.
+Где X[ i ] [ j ] есть значение j-го признака у i-ой точки данных.
 
 
 ./LinearRegression/lr_exec.[cpp, py]
