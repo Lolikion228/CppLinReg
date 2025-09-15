@@ -85,22 +85,23 @@ def train_linear_regression(X, y, test_frac, n_epochs, initial_lr, decay, reg, v
 
 def main():
     args = sys.argv # n_epochs initial_lr data_path
-        
+    test_frac = 0.3
+
     if len(args) == 1:
         n_epochs = 512
         initial_lr = 0.01
         decay_rate = 0.25
         reg = 1e-3
-        test_frac = 0.3
+        
         # data_path = './data/orig_data.txt'
-    elif len(args) == 6:
+    elif len(args) == 5:
         n_epochs = int(args[1])
         initial_lr = float(args[2])
         decay_rate = float(args[3])
         reg = float(args[4])
-        test_frac = float(args[5])
+        
     else:
-        raise Exception(f"you should pass 0 or 5 arguments, but {len(args)-1} were passed")
+        raise Exception(f"you should pass 0 or 4 arguments, but {len(args)-1} were passed")
 
 
     X, y = process_data('./data/orig_data.txt')  
