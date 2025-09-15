@@ -69,7 +69,7 @@ class LinReg{
 };
 
 /*
-data filet format should be like:
+data file format should be like:
 
 n_obj dim
 x[0][0] x[0][1]  ...  x[0][dim - 1]  y[0]
