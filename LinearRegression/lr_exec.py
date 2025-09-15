@@ -46,7 +46,9 @@ def process_data(data_path='./data/orig_data.txt', max_obj=None):
     return X, y
 
 
-def train_linear_regression(X, y, n_epochs, initial_lr, decay, reg, verbose=True):
+def train_linear_regression(X, y, test_frac, n_epochs, initial_lr, decay, reg, verbose=True):
+
+    ind = int(X.shape[0] * (1 - test_frac))
 
     model = SGDRegressor(
         learning_rate = 'invscaling', 
@@ -64,21 +66,20 @@ def train_linear_regression(X, y, n_epochs, initial_lr, decay, reg, verbose=True
  
     t0 = time.time()
 
-    model.fit(X, y,
-              coef_init=np.random.uniform(-0.1, 0.1, X.shape[1]),
-              intercept_init=np.random.uniform(-0.1, 0.1))
-    y_pred = model.predict(X)
-    mse_max = mean_squared_error(y, y_pred)
-    
+    model.fit(X[:ind,:], y[:ind],
+              coef_init=np.random.uniform(-0.1, 0.1, X[:ind,:].shape[1]),
+              intercept_init=np.random.uniform(-0.1, 0.1))    
     for _ in range(n_epochs-1):
-         model.fit(X, y)
-
+         model.fit(X[:ind,:], y[:ind])
     elapsed_time = time.time() - t0
 
-    y_pred = model.predict(X)
-    mse_min = mean_squared_error(y, y_pred)
+    train_pred = model.predict(X[:ind,:])
+    mse_train = mean_squared_error(y[:ind], train_pred)
 
-    return elapsed_time, mse_max, mse_min
+    test_pred = model.predict(X[ind:,:])
+    mse_test = mean_squared_error(y[ind:], test_pred)
+
+    return elapsed_time, mse_train, mse_test
 
 
 
@@ -90,19 +91,21 @@ def main():
         initial_lr = 0.01
         decay_rate = 0.25
         reg = 1e-3
+        test_frac = 0.3
         # data_path = './data/orig_data.txt'
-    elif len(args) == 5:
+    elif len(args) == 6:
         n_epochs = int(args[1])
         initial_lr = float(args[2])
         decay_rate = float(args[3])
         reg = float(args[4])
+        test_frac = float(args[5])
     else:
-        raise Exception(f"you should pass 0 or 4 arguments, but {len(args)-1} were passed")
+        raise Exception(f"you should pass 0 or 5 arguments, but {len(args)-1} were passed")
 
 
     X, y = process_data('./data/orig_data.txt')  
-    elapsed_time, mse_max, mse_min = train_linear_regression(X, y, n_epochs, initial_lr, decay_rate, reg, verbose=False)
-    print(elapsed_time, mse_max, mse_min)
+    elapsed_time, mse_train, mse_test = train_linear_regression(X, y, test_frac, n_epochs, initial_lr, decay_rate, reg, verbose=False)
+    print(elapsed_time, mse_train, mse_test)
 
 
 if __name__ == "__main__":
