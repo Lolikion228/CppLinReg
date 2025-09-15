@@ -24,7 +24,7 @@ LinReg::LinReg(int d, double a, double b){
     weights = (double*) calloc(dim + 1, sizeof(double));// init with zeros
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::normal_distribution<double> dist(a,b);
+    std::uniform_real_distribution<double> dist(a,b);
     for(int i = 0; i <= dim; ++i) {
         weights[i] = dist(gen);
     }
