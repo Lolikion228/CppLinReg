@@ -3,16 +3,14 @@
 #include <cmath>
 
 
-
-
 int main(int argc, char**args){
 
-    
     int n_epochs;
     double initial_lr;
     double decay_rate;
     std::string fpath = "./data/orig_data.txt";
-    double regularization_alpha = 1e-3;
+    double regularization_alpha;
+    double test_frac = 0.3;
 
     if(argc == 1){
         n_epochs = 512;
@@ -39,7 +37,7 @@ int main(int argc, char**args){
 
     LinReg LR1{dim, -0.1, 0.1};
 
-    LR1.fit(X, y, n_obj, *lr, n_epochs, regularization_alpha, false);
+    LR1.fit(X, y, test_frac, n_obj, *lr, n_epochs, regularization_alpha, false);
     
     free_data(X, y, n_obj);
 

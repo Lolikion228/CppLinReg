@@ -65,10 +65,12 @@ void LinReg::SetWeights(double *w){
 
 
 // X[n_obj][dim]
-void LinReg::fit(double** X, double* y, int n_obj, LRSchedulerBase& lr, int n_epoch, double alpha, bool verbose){
+void LinReg::fit(double** X, double* y, double test_frac, int n_obj, LRSchedulerBase& lr, int n_epoch, double alpha, bool verbose){
     double total_loss = 0;
-    double min_loss = std::numeric_limits<double>::max();
-    double max_loss = 0;
+    double mse_train = std::numeric_limits<double>::max();
+
+
+    int n_train_obj  = floor(n_obj * (1 - test_frac));
 
     auto fit_start = std::chrono::high_resolution_clock::now();
 
@@ -83,10 +85,10 @@ void LinReg::fit(double** X, double* y, int n_obj, LRSchedulerBase& lr, int n_ep
             std::cout << "Epoch " << k + 1 << " / " << n_epoch;
         }
         //computing y_pred - y
-        double* pred = pred_batch(X, n_obj);
-        double* diff = (double*)calloc(n_obj, sizeof(double));
+        double* pred = pred_batch(X, n_train_obj);
+        double* diff = (double*)calloc(n_train_obj, sizeof(double));
 
-        for(int i=0; i<n_obj; ++i){
+        for(int i=0; i<n_train_obj; ++i){
             diff[i] = pred[i] - y[i];
         }
 
@@ -98,19 +100,19 @@ void LinReg::fit(double** X, double* y, int n_obj, LRSchedulerBase& lr, int n_ep
         double* grad = (double*)calloc((dim+1), sizeof(double));
         grad[dim] = 0;
 
-        for(int j=0; j<n_obj; ++j){
+        for(int j=0; j<n_train_obj; ++j){
             grad[dim] += diff[j];
         }
 
         for(int i=0; i<dim; ++i){
             grad[i] = 0;
-            for(int j=0; j<n_obj; ++j){
+            for(int j=0; j<n_train_obj; ++j){
                 grad[i] += X[j][i] * diff[j];
             }
         }
 
         for(int i=0; i<=dim; ++i){
-            grad[i] *= (2.0 / n_obj);
+            grad[i] *= (2.0 / n_train_obj);
             max_grad = std::max(max_grad, std::abs(grad[i]));
         }
         
@@ -133,13 +135,12 @@ void LinReg::fit(double** X, double* y, int n_obj, LRSchedulerBase& lr, int n_ep
         // computing MSE
         double epoch_loss = 0;
 
-        for(int j=0; j<n_obj; ++j){
+        for(int j=0; j<n_train_obj; ++j){
             epoch_loss += diff[j]*diff[j];
         }
 
-        epoch_loss /= n_obj;
-        min_loss = std::min(epoch_loss, min_loss);
-        max_loss = std::max(epoch_loss, max_loss);
+        epoch_loss /= n_train_obj;
+        mse_train = std::min(epoch_loss, mse_train);
         free(diff);
 
         
@@ -152,15 +153,27 @@ void LinReg::fit(double** X, double* y, int n_obj, LRSchedulerBase& lr, int n_ep
     auto fit_end = std::chrono::high_resolution_clock::now();
     auto fit_duration = std::chrono::duration_cast<std::chrono::microseconds>(fit_end - fit_start);
 
+    double mse_test = 0;
+    int n_test_obj = n_obj - n_train_obj;
+
+    // WARNING ALERT IMPOSTER POINTER ARITHMETIC  
+    double* pred = pred_batch(X + n_train_obj, n_test_obj);
+    for(int i=0; i < n_test_obj; ++i){
+        mse_test += pow(pred[i] - y[ n_train_obj + i ], 2); 
+    }
+    mse_test /= n_test_obj;
+    free(pred);
+
     if(verbose){
         std::cout << "total time elapsed " << fit_duration.count() / 1000000.0 << " seconds\n";
-        std::cout << "max_loss " << max_loss << "\n";
-        std::cout << "min_loss " << min_loss << "\n";
+        std::cout << "mse_train " << mse_train << "\n";
+        std::cout << "mse_test " << mse_test << "\n";
     }
     else{
         std::cout << fit_duration.count() / 1000000.0 << " ";
-        std::cout << max_loss << " ";
-        std::cout << min_loss << "\n";
+        std::cout << mse_train << " ";
+        std::cout << mse_test << "\n";
+        
     }
   
 }

@@ -58,7 +58,7 @@ class LinReg{
 
         // X[n_obj][dim] 
         // alpha - weight for l2 regularization
-        void fit(double** X, double* y, int n_obj, LRSchedulerBase& lr, int n_epoch, double alpha, bool verbose);
+        void fit(double** X, double* y, double test_frac, int n_obj, LRSchedulerBase& lr, int n_epoch, double alpha, bool verbose);
 
 
         friend std::ostream& operator << (std::ostream& out, const LinReg& LR);
