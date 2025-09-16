@@ -17,14 +17,12 @@ int main(int argc, char**args){
         initial_lr = 0.01;
         decay_rate = 0.25;
         regularization_alpha = 1e-3;
-        // fpath = "./data/orig_data.txt";
     }
     else if(argc == 5) {
         n_epochs = std::stoi(args[1]);
         initial_lr = std::stod(args[2]);
         decay_rate = std::stod(args[3]);
         regularization_alpha = std::stod(args[4]);
-        // fpath = args[4];
     }
     else{
         throw std::invalid_argument("you should pass 0 or 4 arguments, you passed " + std::to_string(argc-1) + "." );
