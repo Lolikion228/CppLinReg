@@ -195,7 +195,7 @@ LinReg::~LinReg(){
 
 
 std::tuple<double**, double*, int, int> process_data(const std::string& data_path, int max_obj){
-    // data reading
+
     std::ifstream file(data_path);
     int n_obj;
     int dim;
@@ -223,7 +223,7 @@ std::tuple<double**, double*, int, int> process_data(const std::string& data_pat
     file.close();
 
 
-    // data normalizing  (min_max)
+ 
     for(int i=0; i<n_obj; ++i){
         for(int j=0; j<dim; ++j){
             X[i][j] /= max_val[j];
@@ -238,7 +238,7 @@ std::tuple<double**, double*, int, int> process_data(const std::string& data_pat
 }
 
 std::tuple<double**, double*, int, int> process_data(const std::string& data_path){
-    // data reading
+
     std::ifstream file(data_path);
     int n_obj;
     int dim;
@@ -266,7 +266,6 @@ std::tuple<double**, double*, int, int> process_data(const std::string& data_pat
 
 
 
-    // data normalizing  (min_max)
     for(int i=0; i<n_obj; ++i){
         for(int j=0; j<dim; ++j){
             X[i][j] /= max_val[j];
