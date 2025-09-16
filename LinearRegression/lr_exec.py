@@ -33,7 +33,6 @@ def process_data(data_path='./data/orig_data.txt', max_obj=None):
     X = np.array(X)
     y = np.array(y)
     
-    # Нормализуем данные (min-max normalization)
     X_max = np.max(np.abs(X), axis=0)
     X_max[X_max == 0] = 1  
     X = X / X_max
@@ -65,7 +64,6 @@ def train_linear_regression(X, y, test_frac, n_epochs, initial_lr, decay, reg, v
     )
  
     t0 = time.time()
-
     model.fit(X[:ind,:], y[:ind],
               coef_init=np.random.uniform(-0.1, 0.1, X[:ind,:].shape[1]),
               intercept_init=np.random.uniform(-0.1, 0.1))    
@@ -84,7 +82,7 @@ def train_linear_regression(X, y, test_frac, n_epochs, initial_lr, decay, reg, v
 
 
 def main():
-    args = sys.argv # n_epochs initial_lr data_path
+    args = sys.argv
     test_frac = 0.3
 
     if len(args) == 1:
@@ -93,7 +91,6 @@ def main():
         decay_rate = 0.25
         reg = 1e-3
         
-        # data_path = './data/orig_data.txt'
     elif len(args) == 5:
         n_epochs = int(args[1])
         initial_lr = float(args[2])
